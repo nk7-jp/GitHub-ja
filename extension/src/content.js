@@ -15,7 +15,8 @@
 
 	const hasChrome = typeof chrome !== 'undefined' && chrome.storage;
 	// termStyle：用語の出し方　ja＝カタカナ（初期）／both＝カタカナ (English)／en＝英語のまま
-	const DEFAULTS = { enabled: true, termStyle: 'ja', tooltips: true, collect: false };
+	// mt：変更履歴などを Chrome 内蔵の翻訳で訳す（初期はオフ）
+	const DEFAULTS = { enabled: true, termStyle: 'ja', tooltips: true, collect: false, mt: false };
 	let settings = Object.assign({}, DEFAULTS);
 
 	// ---------------------------------------------------------------- 訳さない場所
@@ -71,6 +72,144 @@
 		return r;
 	}
 
+
+	// ---------------------------------------------------------------- 機械翻訳（Chrome 内蔵の Translator API）
+	// 辞書にない文（変更履歴のタイトルなど）を、決めた場所だけ端末の中で翻訳する。外部には送らない。
+	const MT_TARGETS = (globalThis.GHJA_MT_TARGETS || []).join(',');
+	const MT_OPTS = { sourceLanguage: 'en', targetLanguage: 'ja' };
+	let mtState = 'off';            // off / unsupported / needs-download / downloading / ready
+	let translator = null;
+	const mtCache = new Map();
+	const mtEls = new Set();
+	let mtQueue = [], mtBusy = false, mtCacheTimer = 0;
+
+	async function mtInit() {
+		if (!settings.enabled || !settings.mt || !MT_TARGETS) { mtState = 'off'; return; }
+		if (typeof Translator === 'undefined') { mtState = 'unsupported'; return; }
+		try {
+			if (hasChrome) {
+				const got = await new Promise((res) => chrome.storage.local.get({ mtCache: {} }, res));
+				for (const [k, v] of Object.entries(got.mtCache || {})) mtCache.set(k, v);
+			}
+			const a = await Translator.availability(MT_OPTS);
+			if (a === 'available') {
+				translator = await Translator.create(MT_OPTS);
+				mtState = 'ready';
+				mtScan(document.body);
+			} else if (a === 'downloadable' || a === 'downloading') {
+				mtState = 'needs-download';
+				showMtChip();
+			} else {
+				mtState = 'unsupported';
+			}
+		} catch (e) {
+			mtState = 'unsupported';
+		}
+	}
+
+	// 言語パックのダウンロードには、ページ上でのクリックが必要
+	let chipHost = null;
+	function showMtChip() {
+		if (chipHost || !document.body) return;
+		try { if (Date.now() - (+localStorage.getItem('ghja.mtChipLater') || 0) < 7 * 864e5) return; } catch (e) {}
+		chipHost = document.createElement('div');
+		chipHost.id = 'ghja-chip-host';
+		const sh = chipHost.attachShadow({ mode: 'open' });
+		sh.innerHTML = `<style>
+			.c { position: fixed; right: 16px; bottom: 16px; z-index: 2147483646; display: flex; align-items: center; gap: 10px;
+				padding: 10px 12px 10px 14px; border-radius: 12px; background: #1f2328; color: #f0f6fc; box-shadow: 0 8px 24px rgba(0,0,0,.35);
+				font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic UI", "Meiryo", sans-serif; max-width: 420px; }
+			b { font-weight: 600; } small { display: block; opacity: .7; font-size: 11.5px; }
+			button { font: inherit; border: 0; border-radius: 8px; padding: 5px 12px; cursor: pointer; background: #2ea043; color: #fff; white-space: nowrap; }
+			button.x { background: transparent; color: #9198a1; padding: 4px 6px; }
+		</style><div class="c" role="dialog"><div><b>GitHub-ja：機械翻訳の準備</b>
+			<small class="m">Chrome 内蔵の翻訳を使うため、英語→日本語の言語パックを準備します（初回だけ）。</small></div>
+			<button class="go">準備する</button><button class="x" title="あとで" aria-label="あとで">✕</button></div>`;
+		const msg = sh.querySelector('.m'), go = sh.querySelector('.go');
+		sh.querySelector('.x').onclick = () => { try { localStorage.setItem('ghja.mtChipLater', Date.now()); } catch (e) {} hideMtChip(); };
+		go.onclick = async () => {
+			go.disabled = true; mtState = 'downloading';
+			try {
+				translator = await Translator.create(Object.assign({}, MT_OPTS, {
+					monitor(m) { m.addEventListener('downloadprogress', (e) => { msg.textContent = '準備中… ' + Math.round((e.loaded || 0) * 100) + '%'; }); }
+				}));
+				mtState = 'ready';
+				msg.textContent = '準備できました。';
+				setTimeout(hideMtChip, 1500);
+				mtScan(document.body);
+			} catch (e) {
+				mtState = 'unsupported';
+				msg.textContent = 'この端末では Chrome 内蔵の翻訳が使えないようです。';
+				go.remove();
+			}
+		};
+		document.documentElement.appendChild(chipHost);
+	}
+	function hideMtChip() { if (chipHost) { chipHost.remove(); chipHost = null; } }
+
+	function mtScan(root) {
+		if (mtState !== 'ready' || !MT_TARGETS || !root || root.nodeType !== 1 && root.nodeType !== 3) return;
+		const els = [];
+		const base = root.nodeType === 3 ? root.parentElement : root;
+		if (!base) return;
+		const hit = base.closest(MT_TARGETS);
+		if (hit) els.push(hit);
+		base.querySelectorAll(MT_TARGETS).forEach((e) => els.push(e));
+		for (const el of els) {
+			if (el.closest(EXCLUDE)) continue;
+			const tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+			while (tw.nextNode()) {
+				const n = tw.currentNode, v = n.nodeValue;
+				const rec = textRecords.get(n);
+				if (rec && rec.done === v) continue;
+				if (!/[A-Za-z]{3}/.test(v) || v.trim().length < 6) continue;
+				mtQueue.push(n);
+			}
+		}
+		mtRun();
+	}
+
+	async function mtRun() {
+		if (mtBusy) return;
+		mtBusy = true;
+		try {
+			while (mtQueue.length && mtState === 'ready' && settings.mt && settings.enabled) {
+				const n = mtQueue.shift();
+				if (!n.isConnected) continue;
+				const orig = n.nodeValue, key = orig.trim();
+				const rec = textRecords.get(n);
+				if (rec && rec.done === orig) continue;
+				let ja = mtCache.get(key);
+				if (!ja) {
+					ja = await translator.translate(key);
+					mtCache.set(key, ja);
+					saveMtCache();
+				}
+				if (!n.isConnected || n.nodeValue !== orig) continue;
+				const done = orig.match(/^\s*/)[0] + ja + orig.match(/\s*$/)[0];
+				observer.disconnect();
+				n.nodeValue = done;
+				textRecords.set(n, { orig, done });
+				const p = n.parentElement;
+				if (p) { p.setAttribute('data-ghja-mt', key); mtEls.add(p); }
+				observe();
+			}
+		} catch (e) {
+			// 翻訳に失敗したものは英語のまま
+		} finally {
+			mtBusy = false;
+		}
+	}
+
+	function saveMtCache() {
+		if (!hasChrome) return;
+		clearTimeout(mtCacheTimer);
+		mtCacheTimer = setTimeout(() => {
+			const entries = [...mtCache.entries()].slice(-800);
+			chrome.storage.local.set({ mtCache: Object.fromEntries(entries) });
+		}, 2000);
+	}
+
 	// ---------------------------------------------------------------- 元に戻すための記録
 	const textRecords = new Map();   // Text → { orig, done }
 	const attrRecords = new Map();   // Element → { attr: orig }
@@ -97,6 +236,7 @@
 		const r = translate(val);
 		if (!r) {
 			if (rec) textRecords.delete(node); // GitHub が別の文字に書き換えた
+			if (MT_TARGETS && node.parentElement && node.parentElement.closest(MT_TARGETS)) return; // 機械翻訳に任せる
 			if (settings.collect) collect(node, val);
 			return;
 		}
@@ -188,6 +328,10 @@
 		attrRecords.clear();
 		for (const el of termEls) el.removeAttribute('data-ghja-term');
 		termEls.clear();
+		for (const el of mtEls) el.removeAttribute('data-ghja-mt');
+		mtEls.clear();
+		mtQueue = [];
+		hideMtChip();
 		hideTip();
 	}
 
@@ -199,7 +343,7 @@
 		queue.clear();
 		observer.disconnect();
 		try {
-			for (const n of items) if (n.isConnected) walk(n);
+			for (const n of items) if (n.isConnected) { walk(n); if (mtState === 'ready') mtScan(n); }
 		} finally {
 			observe();
 		}
@@ -250,8 +394,9 @@
 	function showTip(el) {
 		ensureTip();
 		const ids = (el.getAttribute('data-ghja-term') || '').split(' ').filter(id => TERMS[id]);
-		if (!ids.length) return;
-		tipBox.innerHTML = ids.map(id => {
+		const orig = el.getAttribute('data-ghja-mt');
+		if (!ids.length && !orig) return;
+		tipBox.innerHTML = (orig ? `<div class="term"><div class="h">機械翻訳<span class="en">Chrome 内蔵の翻訳（この端末の中で翻訳）</span></div><div class="m">原文：${esc(orig)}</div></div>` : '') + ids.map(id => {
 			const t = TERMS[id];
 			return `<div class="term"><div class="h">${esc(t.ja)}<span class="en">${esc(t.en)}</span></div>` +
 				`<div class="d">${esc(t.desc)}</div>${t.more ? `<div class="m">${esc(t.more)}</div>` : ''}</div>`;
@@ -273,7 +418,7 @@
 	}
 	document.addEventListener('mouseover', (e) => {
 		if (!settings.enabled || !settings.tooltips) return;
-		const el = e.target instanceof Element ? e.target.closest('[data-ghja-term]') : null;
+		const el = e.target instanceof Element ? e.target.closest('[data-ghja-term], [data-ghja-mt]') : null;
 		if (el === tipFor) return;
 		hideTip();
 		if (!el) return;
@@ -326,12 +471,13 @@
 		walk(document.body);
 		observe();
 		setInterval(prune, 30000);
+		mtInit();
 	}
 	function retranslate() {
 		observer.disconnect();
 		restoreAll();
 		applyClass();
-		if (settings.enabled) { walk(document.body); observe(); }
+		if (settings.enabled) { walk(document.body); observe(); mtInit(); }
 	}
 
 	// GitHub の React が画面を組み立て終わるのを少し待ってから始める
@@ -356,5 +502,5 @@
 	}
 
 	// テスト用
-	globalThis.__ghja = { translate, walk, restoreAll, settings: () => settings, set: (s) => { Object.assign(settings, s); } };
+	globalThis.__ghja = { translate, walk, restoreAll, mtInit, mtState: () => mtState, settings: () => settings, set: (s) => { Object.assign(settings, s); } };
 })();

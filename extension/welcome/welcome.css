@@ -72,3 +72,6 @@ footer a { color: var(--mute); }
 .tip .h { font-weight: 600; }
 .tip .en { opacity: .65; font-weight: 400; margin-left: 4px; }
 .tip .m { margin-top: 4px; opacity: .75; font-size: 12px; }
+.row small + small { display: block; margin-top: 4px; }
+.mt-status:empty { display: none; }
+.mt-status { color: var(--sel) !important; }

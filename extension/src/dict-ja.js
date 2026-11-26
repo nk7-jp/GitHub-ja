@@ -1157,3 +1157,13 @@ globalThis.GHJA_DICT = {
 		[/^Show (\d+) more$/, 'さらに $1 件表示']
 	]
 };
+
+// 機械翻訳（Chrome 内蔵の翻訳）を使う場所。設定でオンにした人だけ。
+// ここに書いた要素の中の英文だけを、端末の中で翻訳する。README・コメント・コードには使わない。
+globalThis.GHJA_MT_TARGETS = [
+	'a[href^="https://github.blog/changelog/"]',      // ダッシュボードの「GitHub の最新の更新」
+	'a[href^="https://github.blog/news-insights/"]',
+	'a[href^="https://github.blog/"] h3',
+	'.js-notice .flash-messages',
+	'[data-testid="dashboard-changelog"] li a'
+];

@@ -2,8 +2,8 @@
 	"manifest_version": 3,
 	"name": "Japanese UI & Glossary for GitHub",
 	"short_name": "GitHub-ja",
-	"description": "GitHub の画面を自然な日本語に。Pull request や Fork などの用語はカーソルを乗せると意味がわかる。通信なし。Japanese UI and Git glossary for GitHub (unofficial).",
-	"version": "0.3.2",
+	"description": "GitHub の画面を自然な日本語に。用語はカーソルを乗せると意味がわかる。翻訳はすべて端末の中。Japanese UI and Git glossary for GitHub (unofficial).",
+	"version": "0.4.0",
 	"icons": {
 		"16": "icons/icon16.png",
 		"32": "icons/icon32.png",

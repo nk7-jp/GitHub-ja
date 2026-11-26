@@ -1,11 +1,13 @@
 // GitHub-ja のポップアップ（設定）
-const DEFAULTS = { enabled: true, termStyle: 'ja', tooltips: true, collect: false };
+const DEFAULTS = { enabled: true, termStyle: 'ja', tooltips: true, collect: false, mt: false };
 const KEYS = Object.keys(DEFAULTS);
 
+let mtUnsupported = false;
 function syncDisabled() {
 	const on = document.getElementById('enabled').checked;
 	document.getElementById('termStyle').disabled = !on;
 	document.getElementById('tooltips').disabled = !on;
+	if (!mtUnsupported) document.getElementById('mt').disabled = !on;
 }
 
 chrome.storage.sync.get(DEFAULTS, (s) => {
@@ -44,3 +46,10 @@ document.getElementById('clearMissing').addEventListener('click', () => {
 });
 
 document.getElementById('ver').textContent = 'v' + chrome.runtime.getManifest().version;
+
+// Chrome 内蔵の翻訳が使えない環境では、切り替えを無効にして理由を出す
+if (typeof Translator === 'undefined') {
+	mtUnsupported = true;
+	document.getElementById('mt').disabled = true;
+	document.getElementById('mtNote').textContent = 'この Chrome では使えません（パソコン版 Chrome 138 以降）';
+}

@@ -50,17 +50,53 @@ document.addEventListener('focusin', (e) => { if (e.target.dataset && e.target.d
 document.addEventListener('focusout', () => { tip.hidden = true; });
 
 // 今の設定を読み込む（2回目以降に開いたとき用）
-const DEFAULTS = { termStyle: 'ja', tooltips: true };
+const DEFAULTS = { termStyle: 'ja', tooltips: true, mt: false };
 chrome.storage.sync.get(DEFAULTS, (s) => {
 	const r = document.querySelector(`input[name=termStyle][value="${s.termStyle}"]`) || document.querySelector('input[value=ja]');
 	r.checked = true;
 	document.getElementById('tooltips').checked = !!s.tooltips;
+	document.getElementById('mt').checked = !!s.mt;
 });
+
+// Chrome 内蔵の翻訳が使えるか
+const MT_OPTS = { sourceLanguage: 'en', targetLanguage: 'ja' };
+const mtStatus = document.getElementById('mtStatus');
+let mtAvail = 'unavailable';
+(async () => {
+	if (typeof Translator === 'undefined') {
+		mtStatus.textContent = 'この Chrome では使えません（パソコン版の Chrome 138 以降が必要です）。';
+		document.getElementById('mt').disabled = true;
+		return;
+	}
+	try { mtAvail = await Translator.availability(MT_OPTS); } catch (e) { mtAvail = 'unavailable'; }
+	if (mtAvail === 'unavailable') {
+		mtStatus.textContent = 'この端末では使えません。';
+		document.getElementById('mt').disabled = true;
+	} else if (mtAvail === 'available') {
+		mtStatus.textContent = '言語パックは準備できています。';
+	}
+})();
+
+// 「始める」を押したときに、必要なら言語パックを準備する（クリックが必要なため）
+async function prepareMt() {
+	if (mtAvail !== 'downloadable' && mtAvail !== 'downloading') return;
+	mtStatus.textContent = '言語パックを準備しています…';
+	try {
+		await Translator.create(Object.assign({}, MT_OPTS, {
+			monitor(m) { m.addEventListener('downloadprogress', (e) => { mtStatus.textContent = '言語パックを準備しています… ' + Math.round((e.loaded || 0) * 100) + '%'; }); }
+		}));
+		mtStatus.textContent = '言語パックの準備ができました。';
+	} catch (e) {
+		mtStatus.textContent = '言語パックを準備できませんでした。GitHub のページでもう一度準備できます。';
+	}
+}
 
 document.getElementById('start').addEventListener('click', () => {
 	const termStyle = document.querySelector('input[name=termStyle]:checked').value;
 	const tooltips = document.getElementById('tooltips').checked;
-	chrome.storage.sync.set({ termStyle, tooltips, enabled: true, onboarded: true }, () => {
+	const mt = document.getElementById('mt').checked;
+	if (mt) prepareMt();
+	chrome.storage.sync.set({ termStyle, tooltips, mt, enabled: true, onboarded: true }, () => {
 		document.getElementById('start').textContent = '保存しました';
 		document.getElementById('done').hidden = false;
 	});

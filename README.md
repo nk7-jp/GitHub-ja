@@ -88,6 +88,8 @@ version が上がっていれば GitHub Actions（`.github/workflows/release.yml
 
 ## プライバシー
 
+プライバシーポリシー：https://nk7.jp/policy/privacy/github-ja/ （利用規約：https://nk7.jp/policy/app-terms/）
+
 この拡張機能は、どのデータも外部に送信しません。保存するのは設定（Chrome の同期ストレージ）と、「訳されていない言葉を集める」をオンにしたときの文言の一覧（この端末のみ）だけです。
 
 ## ライセンス

@@ -76,7 +76,7 @@ GitHub の [Releases](https://github.com/nk7-jp/GitHub-ja/releases) にある最
 | ホスト権限の理由 | github.com と gist.github.com のページの画面の文言を日本語に置き換えるため。辞書と Chrome 内蔵の翻訳機能（端末の中で動く）だけを使い、ページの内容を外部に送信することはない。 |
 | リモートコード | 「いいえ、リモートコードを使用していません」 |
 | データの使用 | どの項目にもチェックを入れない（収集しない）。下の 3 つの宣言にはチェックを入れる |
-| プライバシーポリシーの URL | https://github.com/nk7-jp/GitHub-ja/blob/main/PRIVACY.md |
+| プライバシーポリシーの URL | https://nk7.jp/policy/privacy/github-ja/ |
 
 ## 5. 「配布」タブ
 - 公開設定：公開

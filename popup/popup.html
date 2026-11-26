@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8" />
+	<title>GitHub-ja</title>
+	<link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+	<header>
+		<img src="../icons/icon32.png" alt="" width="24" height="24" />
+		<div>
+			<strong>GitHub-ja</strong>
+			<span class="sub">GitHub 日本語化と用語ガイド</span>
+		</div>
+	</header>
+
+	<label class="row">
+		<span>
+			<b>日本語で表示する</b>
+			<small>オフにするとすぐ英語に戻ります</small>
+		</span>
+		<input type="checkbox" id="enabled" />
+	</label>
+	<label class="row">
+		<span>
+			<b>用語に英語を併記する</b>
+			<small>例：プルリクエスト (Pull request)</small>
+		</span>
+		<input type="checkbox" id="showEnglish" />
+	</label>
+	<label class="row">
+		<span>
+			<b>用語の説明を出す</b>
+			<small>点線の付いた言葉にカーソルを乗せると表示</small>
+		</span>
+		<input type="checkbox" id="tooltips" />
+	</label>
+
+	<details id="dev">
+		<summary>訳されていない言葉を集める（協力用）</summary>
+		<label class="row">
+			<span>
+				<b>集める</b>
+				<small>訳がない画面の英語を、この端末の中だけに記録します</small>
+			</span>
+			<input type="checkbox" id="collect" />
+		</label>
+		<p class="count">記録：<span id="missingCount">0</span> 件</p>
+		<div class="buttons">
+			<button id="copyMissing" type="button">コピー</button>
+			<button id="clearMissing" type="button" class="ghost">消去</button>
+		</div>
+		<p class="hint">コピーした内容を GitHub のイシューに貼ってもらえると、辞書に追加します。</p>
+	</details>
+
+	<footer>
+		<a href="https://github.com/nk7-jp/GitHub-ja" target="_blank" rel="noopener">GitHub</a>
+		<span>・</span>
+		<a href="https://github.com/nk7-jp/GitHub-ja/issues/new" target="_blank" rel="noopener">誤訳・要望を送る</a>
+		<span class="ver" id="ver"></span>
+	</footer>
+	<script src="popup.js"></script>
+</body>
+</html>

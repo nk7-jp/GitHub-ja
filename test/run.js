@@ -1,0 +1,41 @@
+const {JSDOM}=require('jsdom');const fs=require('fs');
+const html=fs.readFileSync(__dirname+'/fixture.html','utf8');
+const dom=new JSDOM(html,{runScripts:'outside-only',pretendToBeVisual:true});
+const w=dom.window;
+for(const f of ['terms.js','dict-ja.js','content.js']) w.eval(fs.readFileSync(__dirname+'/../src/'+f,'utf8'));
+setTimeout(()=>{
+ const d=w.document, T=s=>[...d.querySelectorAll(s)].map(e=>e.textContent.trim());
+ const check=(name,got,exp)=>console.log((JSON.stringify(got)===JSON.stringify(exp)?'OK  ':'NG  ')+name, JSON.stringify(got));
+ check('global nav', T('header nav > *'), ['製品','料金']);
+ check('search untouched', T('qbsearch-input span'), ['Search or jump to...']);
+ check('repo nav', T('nav[aria-label=Repository] a > span:first-child'), ['コード','イシュー (Issues)','プルリクエスト (Pull requests)','アクション (Actions)']);
+ check('fork', d.querySelector('a[href$=fork] span').textContent, 'フォーク (Fork)');
+ check('fork term attr', d.querySelector('a[href$=fork] span').getAttribute('data-ghja-term'), 'fork');
+ check('placeholder', d.querySelector('input').placeholder, 'ファイルへ移動');
+ check('code button keeps spaces', d.getElementById('code').textContent, '  コード  ');
+ check('commits pattern', T('a[href$="commits/main"] span'), ['172,650 件のコミット (Commits)']);
+ check('file/commit links untouched', T('table a'), ['Code','Update']);
+ check('relative-time lang', d.querySelector('relative-time').getAttribute('lang'), 'ja');
+ check('description untouched', T('[itemprop=description]'), ['Pull requests']);
+ check('markdown untouched', T('.markdown-body *'), ['Pull requests','Fork']);
+ check('issue title untouched', T('a[data-hovercard-type]'), ['Fork']);
+ check('title attr', d.querySelector('[title]').title, 'パスをコピー');
+ check('Updated + user text untouched', T('span').filter(s=>s.startsWith('Updated U')), ['Updated Update README']);
+ check('Updated time', T('span').filter(s=>s.includes('に更新')), ['2 日前に更新']);
+ check('stars span', T('span').filter(s=>s.includes('195.8k')), ['スター (stars) 195.8k']);
+ // dynamic
+ const s=d.createElement('span'); s.textContent='New issue'; d.body.appendChild(s);
+ setTimeout(()=>{
+  check('dynamic', s.textContent, '新しいイシュー (Issue)');
+  s.firstChild.nodeValue='Close issue';
+  setTimeout(()=>{
+   check('react text change', s.textContent, 'イシュー (Issue)をクローズ');
+   w.__ghja.set({showEnglish:false}); w.__ghja.restoreAll(); w.__ghja.walk(d.body);
+   check('no english', T('nav[aria-label=Repository] a > span:first-child'), ['コード','イシュー','プルリクエスト','アクション']);
+   w.__ghja.restoreAll();
+   check('restore', T('nav[aria-label=Repository] a > span:first-child').concat([d.querySelector('input').placeholder, d.querySelector('[title]').title]), ['Code','Issues','Pull requests','Actions','Go to file','Copy path']);
+   check('restore attr removed', d.querySelectorAll('[data-ghja-term]').length, 0);
+   process.exit(0);
+  },100);
+ },100);
+},1500);

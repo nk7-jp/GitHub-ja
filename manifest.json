@@ -1,0 +1,31 @@
+{
+	"manifest_version": 3,
+	"name": "__MSG_extName__",
+	"short_name": "GitHub-ja",
+	"description": "__MSG_extDescription__",
+	"version": "0.1.0",
+	"default_locale": "ja",
+	"icons": {
+		"16": "icons/icon16.png",
+		"32": "icons/icon32.png",
+		"48": "icons/icon48.png",
+		"128": "icons/icon128.png"
+	},
+	"permissions": ["storage"],
+	"content_scripts": [
+		{
+			"matches": ["https://github.com/*", "https://gist.github.com/*"],
+			"js": ["src/terms.js", "src/dict-ja.js", "src/content.js"],
+			"css": ["src/content.css"],
+			"run_at": "document_idle"
+		}
+	],
+	"action": {
+		"default_popup": "popup/popup.html",
+		"default_title": "GitHub-ja",
+		"default_icon": {
+			"16": "icons/icon16.png",
+			"32": "icons/icon32.png"
+		}
+	}
+}

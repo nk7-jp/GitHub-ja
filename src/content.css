@@ -1,0 +1,17 @@
+/* 用語の説明がある言葉に、うすい点線の下線を付ける */
+html.ghja-tips [data-ghja-term] {
+	text-decoration-line: underline;
+	text-decoration-style: dotted;
+	text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 3px;
+	cursor: help;
+}
+/* ボタンやタブはクリックできることがわかるよう、カーソルはそのまま */
+html.ghja-tips a[data-ghja-term],
+html.ghja-tips button[data-ghja-term],
+html.ghja-tips a [data-ghja-term],
+html.ghja-tips button [data-ghja-term],
+html.ghja-tips summary [data-ghja-term] {
+	cursor: inherit;
+}

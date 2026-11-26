@@ -49,6 +49,7 @@ One-click Japanese UI for GitHub with a built-in Git glossary. Translates only G
 ## ストアの URL
 | 項目 | URL |
 |---|---|
+| 公式 URL | nk7.jp（ダッシュボードの一覧から選ぶ） |
 | ホームページ | https://github.com/nk7-jp/GitHub-ja |
 | サポート | https://github.com/nk7-jp/GitHub-ja/issues/new |
 | プライバシーポリシー | https://nk7.jp/policy/privacy/github-ja/ |

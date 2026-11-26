@@ -1062,6 +1062,33 @@ globalThis.GHJA_DICT = {
 		'GitHub Developer Program': 'GitHub 開発者プログラム',
 		'GitHub developer program': 'GitHub 開発者プログラム',
 		'Join the GitHub Developer Program': 'GitHub 開発者プログラムに参加',
+		// v0.4.1：リポジトリ設定の説明
+		'Template repositories let users generate new repositories with the same directory structure and files.': 'テンプレート[[repository]]にすると、同じフォルダ構成とファイルで新しい[[repository]]を作れるようになります。',
+		'The default branch is considered the “base” branch in your repository, against which all pull requests and code commits are automatically made, unless you specify a different branch.': 'デフォルトの[[branch]]は、この[[repository]]の「基準」になる[[branch]]です。別の[[branch]]を指定しない限り、[[pr|pull requests]]や[[commit|commits]]はこの[[branch]]に対して行われます。',
+		'Disallow assets and tags from being modified once a release is published.': '[[release]]を公開したあとは、添付ファイルと[[tag|tags]]を変更できないようにします。',
+		"Upload an image to customize your repository’s social media preview.": 'SNS で共有されたときに表示される、この[[repository]]のプレビュー画像を設定します。',
+		'Images should be at least 640×320px (1280×640px for best display).': '画像は 640×320px 以上にしてください（1280×640px がおすすめです）。',
+		// リリース
+		'Assets': '添付ファイル',
+		'Choose a tag to compare': '比べる[[tag]]を選ぶ',
+		'Delete this release': 'この[[release]]を削除',
+		'Delete this release?': 'この[[release]]を削除しますか？',
+		'This will delete the information for the release': 'この[[release]]の情報を削除します：',
+		'Draft a new release': '新しい[[release]]を下書き',
+		'Add or remove reactions': 'リアクションを追加・削除',
+		'All reactions': 'すべてのリアクション',
+		'Learn about vigilant mode': '厳格モード（vigilant mode）について',
+		'No results found': '見つかりませんでした',
+		'On this page': 'このページの内容',
+		'Open Releases and tags navigation': '[[release|Releases]]と[[tag|tags]]のメニューを開く',
+		// そのほか
+		'Items will be filtered as you type': '入力すると絞り込まれます',
+		'Center content': '中央にそろえる',
+		'View detected secrets': '見つかった[[secret|secrets]]を見る',
+		'View runs': '[[run|runs]]を見る',
+		'Manually run': '手動で実行',
+		'Learn more about repository licenses': '[[repository]]の[[license]]についてくわしく',
+		'branches': '[[branch|branches]]',
 		// アカウント設定
 		'Change username': 'ユーザー名を変更',
 		'Changing your username can have': 'ユーザー名を変えると、',
@@ -1107,6 +1134,9 @@ globalThis.GHJA_DICT = {
 		[/^([\d,]+) lines? changed$/, '$1 行を変更'],
 		[/^([\d,]+) remaining$/, '残り $1'],
 		[/^Workflow runs for (.+)$/, '$1 の[[run|runs]]'],
+		[/^(Delete|Edit): (v?[\w.-]+)$/, (m, a, v) => v + ' を' + (a === 'Delete' ? '削除' : '編集')],
+		[/^More actions for workflow run (\d+)$/, '[[workflow]]の[[run]] $1 のその他の操作'],
+		[/^Pin (.+)$/, '$1 を固定'],
 		[/^By clicking "Add Successor" below, I acknowledge that I am the owner of the (@[\w-]+) account, and am authorizing GitHub to transfer content within that account to my GitHub Successor, designated below, in the event of my death\. I understand that this appointment of a successor does not override legally binding next-of-kin rules or estate laws of any relevant jurisdiction, and does not create a binding will\.$/,
 			'下の「後継者を追加」を押すと、私が $1 アカウントの所有者であり、私が亡くなった場合にこのアカウントの内容を下で指定する GitHub の後継者に移すことを GitHub に許可したものとみなされます。後継者の指定は、関係する地域の法律で定められた近親者の権利や相続法に優先するものではなく、法的な遺言にもなりません。（参考訳。正式な内容は英語の原文です）'],
 		// 日付「Nov 23, 2026」→「2026年11月23日」
@@ -1166,4 +1196,10 @@ globalThis.GHJA_MT_TARGETS = [
 	'a[href^="https://github.blog/"] h3',
 	'.js-notice .flash-messages',
 	'[data-testid="dashboard-changelog"] li a'
+];
+
+// 設定ページの説明文（チェックボックスの下の小さい説明など）。設定ページにはユーザーが書いた文がほぼないので、
+// ページの URL が合うときだけ、ここも機械翻訳の対象にする。
+globalThis.GHJA_MT_PAGE_TARGETS = [
+	{ path: /^\/(settings|[^/]+\/[^/]+\/settings)(\/|$)/, selector: '.note, p.note, .Subhead-description, .form-checkbox .note, .Box-row p.color-fg-muted, .Box-row .text-small, .Layout-main > div > p, .Layout-main form p, .Layout-main section > p' }
 ];

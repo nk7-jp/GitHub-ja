@@ -75,7 +75,15 @@
 
 	// ---------------------------------------------------------------- 機械翻訳（Chrome 内蔵の Translator API）
 	// 辞書にない文（変更履歴のタイトルなど）を、決めた場所だけ端末の中で翻訳する。外部には送らない。
-	const MT_TARGETS = (globalThis.GHJA_MT_TARGETS || []).join(',');
+	// 機械翻訳の場所。ページの URL によって増える（設定ページの説明文など）
+	let MT_TARGETS = '';
+	function mtTargets() {
+		const list = (globalThis.GHJA_MT_TARGETS || []).slice();
+		for (const t of (globalThis.GHJA_MT_PAGE_TARGETS || [])) if (t.path.test(location.pathname)) list.push(t.selector);
+		MT_TARGETS = list.join(',');
+		return MT_TARGETS;
+	}
+	mtTargets();
 	const MT_OPTS = { sourceLanguage: 'en', targetLanguage: 'ja' };
 	let mtState = 'off';            // off / unsupported / needs-download / downloading / ready
 	let translator = null;
@@ -148,6 +156,7 @@
 	function hideMtChip() { if (chipHost) { chipHost.remove(); chipHost = null; } }
 
 	function mtScan(root) {
+		mtTargets(); // GitHub はページを切り替えても読み込み直さないので、毎回 URL を見る
 		if (mtState !== 'ready' || !MT_TARGETS || !root || root.nodeType !== 1 && root.nodeType !== 3) return;
 		const els = [];
 		const base = root.nodeType === 3 ? root.parentElement : root;

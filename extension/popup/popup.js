@@ -1,5 +1,5 @@
 // GitHub-ja のポップアップ（設定）
-const DEFAULTS = { enabled: true, termStyle: 'en', tooltips: true, collect: false };
+const DEFAULTS = { enabled: true, termStyle: 'ja', tooltips: true, collect: false };
 const KEYS = Object.keys(DEFAULTS);
 
 function syncDisabled() {

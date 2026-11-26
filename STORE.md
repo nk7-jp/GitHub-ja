@@ -15,7 +15,7 @@ GitHub の画面を、ブラウザの自動翻訳ではなく「ちゃんとし�
 ■ できること
 ・メニュー、ボタン、設定画面など GitHub の決まった文言を、辞書を使って自然な日本語で表示します
 ・Pull request、Fork、Branch などの Git / GitHub の用語には点線が付き、カーソルを乗せると「要するに何をしているのか」の説明が出ます
-・用語の表示は「英語のまま」「カタカナ (英語)」「カタカナ」から選べます
+・用語の表示は「カタカナ」「カタカナ (英語)」「英語のまま」から選べます（インストール直後に見本を見ながら選べます）
 ・日付や「3 hours ago」などの時間も日本語で表示します
 ・ツールバーのアイコンから、いつでも英語に戻せます
 
@@ -42,3 +42,52 @@ One-click Japanese UI for GitHub with a built-in Git glossary. Translates only G
 ## プライバシー
 - ユーザーデータは収集しない
 - 単一用途：GitHub の画面の日本語化と用語の説明
+
+---
+
+# 最初の提出のしかた（1 回だけ手動）
+
+## 1. zip を用意する
+GitHub の [Releases](https://github.com/nk7-jp/GitHub-ja/releases) にある最新の `GitHub-ja-x.y.z.zip` をダウンロードする（main に push したときに自動で作られる）。
+
+## 2. 新しいアイテムを作る
+1. [デベロッパーダッシュボード](https://chrome.google.com/webstore/devconsole) →「新しいアイテム」
+2. zip をアップロード
+
+## 3. 「ストアの掲載情報」タブ
+| 項目 | 入れるもの |
+|---|---|
+| 説明 | 上の「説明」をコピー |
+| カテゴリ | デベロッパー ツール |
+| 言語 | 日本語 |
+| ストアアイコン | 自動（manifest の 128px） |
+| スクリーンショット | `store/screenshot-1-setup.png`、`store/screenshot-2-popup.png`（＋実際の GitHub の画面があれば） |
+| 小さいプロモーションタイル | `store/small-tile-440x280.png` |
+| 公式 URL | なし |
+| ホームページ URL | https://github.com/nk7-jp/GitHub-ja |
+| サポート URL | https://github.com/nk7-jp/GitHub-ja/issues |
+
+## 4. 「プライバシー」タブ
+| 項目 | 入れるもの |
+|---|---|
+| 単一用途の説明 | GitHub の画面の英語の文言を日本語に置き換え、Git / GitHub の用語にカーソルを乗せると意味を表示する。 |
+| storage の理由 | 日本語化のオンオフや用語の表示方法などの設定を保存するため。 |
+| ホスト権限の理由 | github.com と gist.github.com のページの画面の文言を、拡張機能に入っている辞書で日本語に置き換えるため。ページの内容を外部に送信することはない。 |
+| リモートコード | 「いいえ、リモートコードを使用していません」 |
+| データの使用 | どの項目にもチェックを入れない（収集しない）。下の 3 つの宣言にはチェックを入れる |
+| プライバシーポリシーの URL | https://github.com/nk7-jp/GitHub-ja/blob/main/PRIVACY.md |
+
+## 5. 「配布」タブ
+- 公開設定：公開
+- 地域：すべての地域
+
+## 6. 審査に提出
+「審査のため送信」を押す。ダッシュボードの URL かアイテムの画面に出る 32 文字の ID（英小文字）を控える。
+
+## 7. 自動提出をオンにする
+GitHub-ja のリポジトリ → Settings → Secrets and variables → Actions →「**Variables**」タブ →「New repository variable」
+- Name：`CWS_EXTENSION_ID`
+- Value：控えた ID
+
+入れたら Actions →「ストア接続チェック」→「Run workflow」で接続を確かめる。
+これ以降は `extension/manifest.json` の `version` を上げて main に push するだけで、自動でストアに提出される。

@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>
+html,body{margin:0;width:1280px;height:800px;overflow:hidden}
+body{background:linear-gradient(135deg,#0d1117 0%,#1b2a3a 100%);color:#f0f6fc;font:16px/1.7 "Hiragino Sans","Noto Sans CJK JP",sans-serif;display:flex;align-items:center;gap:70px;padding:0 90px;box-sizing:border-box}
+.text{flex:1}
+h1{font-size:46px;line-height:1.35;margin:0 0 22px;font-weight:700}
+h1 em{font-style:normal;color:#3fb950}
+ul{margin:0;padding:0;list-style:none;font-size:21px}
+li{margin:12px 0;padding-left:34px;position:relative}
+li::before{content:"✓";position:absolute;left:0;color:#3fb950;font-weight:700}
+.frame{flex:none;width:340px;height:340px;border-radius:14px;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.55);transform:scale(1.32);transform-origin:center;background:#fff}
+iframe{border:0;width:340px;height:340px}
+</style></head><body>
+<div class="text">
+<h1>ボタンやメニューだけを<br><em>自然な日本語</em>に</h1>
+<ul>
+<li>README・コード・コメントは訳さない</li>
+<li>ワンクリックで英語に戻せる</li>
+<li>通信なし。ブラウザの中だけで動作</li>
+</ul>
+</div>
+<div class="frame"><iframe src="../extension/popup/popup.html"></iframe></div>
+</body></html>

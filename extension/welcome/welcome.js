@@ -50,9 +50,9 @@ document.addEventListener('focusin', (e) => { if (e.target.dataset && e.target.d
 document.addEventListener('focusout', () => { tip.hidden = true; });
 
 // 今の設定を読み込む（2回目以降に開いたとき用）
-const DEFAULTS = { termStyle: 'en', tooltips: true };
+const DEFAULTS = { termStyle: 'ja', tooltips: true };
 chrome.storage.sync.get(DEFAULTS, (s) => {
-	const r = document.querySelector(`input[name=termStyle][value="${s.termStyle}"]`) || document.querySelector('input[value=en]');
+	const r = document.querySelector(`input[name=termStyle][value="${s.termStyle}"]`) || document.querySelector('input[value=ja]');
 	r.checked = true;
 	document.getElementById('tooltips').checked = !!s.tooltips;
 });

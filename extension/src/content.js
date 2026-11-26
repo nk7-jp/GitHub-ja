@@ -14,8 +14,8 @@
 	globalThis.__ghjaLoaded = true;
 
 	const hasChrome = typeof chrome !== 'undefined' && chrome.storage;
-	// termStyle：用語の出し方　en＝英語のまま（説明は出る）／both＝カタカナ (English)／ja＝カタカナだけ
-	const DEFAULTS = { enabled: true, termStyle: 'en', tooltips: true, collect: false };
+	// termStyle：用語の出し方　ja＝カタカナ（初期）／both＝カタカナ (English)／en＝英語のまま
+	const DEFAULTS = { enabled: true, termStyle: 'ja', tooltips: true, collect: false };
 	let settings = Object.assign({}, DEFAULTS);
 
 	// ---------------------------------------------------------------- 訳さない場所

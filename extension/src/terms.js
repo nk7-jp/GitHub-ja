@@ -1,6 +1,7 @@
 // 用語集：画面上で「カタカナ (English)」と表示し、カーソルを乗せると説明が出る言葉
 //
-//   id: { ja: 画面に出す日本語, en: 英語の正式名, desc: ひとことで言うと何か, more: もう少しくわしく（任意） }
+//   id: { ja: 画面に出す日本語, en: 英語の正式名, desc: ひとことで言うと何か, more: もう少しくわしく（任意）,
+//         plain: true なら、設定にかかわらずいつも日本語で出す（「実行」「差分」のような普通の言葉） }
 //
 // 辞書（dict-ja.js）からは [[id]] や [[id|英語の表記]] の形で呼び出す。
 globalThis.GHJA_TERMS = {
@@ -67,7 +68,7 @@ globalThis.GHJA_TERMS = {
 		desc: 'GitHub Actions で「いつ・何を自動で実行するか」を書いた手順書（.github/workflows/ の YAML ファイル）。'
 	},
 	run: {
-		ja: '実行', en: 'Run',
+		ja: '実行', en: 'Run', plain: true,
 		desc: 'ワークフローが 1 回動いた記録。成功（✓）・失敗（✗）・実行中がわかる。'
 	},
 	contributor: {
@@ -99,7 +100,7 @@ globalThis.GHJA_TERMS = {
 		desc: 'プルリクエストの変更を読んで、承認したり直してほしい点を伝えたりすること。'
 	},
 	diff: {
-		ja: '差分', en: 'Diff',
+		ja: '差分', en: 'Diff', plain: true,
 		desc: '前と比べて何が変わったか。緑（+）が足した行、赤（-）が消した行。'
 	},
 	conflict: {
@@ -107,7 +108,7 @@ globalThis.GHJA_TERMS = {
 		desc: '2 つの変更が同じ場所を別々に書き換えていて、自動で合流できない状態。人が選んで直す。'
 	},
 	draft: {
-		ja: '下書き', en: 'Draft',
+		ja: '下書き', en: 'Draft', plain: true,
 		desc: 'まだ作業中で、マージしてほしい段階ではないプルリクエスト。'
 	},
 	label: {
@@ -119,7 +120,7 @@ globalThis.GHJA_TERMS = {
 		desc: '「v2.0 までにやること」のように、イシューやプルリクエストを締め切りごとにまとめるもの。'
 	},
 	assignee: {
-		ja: '担当者', en: 'Assignee',
+		ja: '担当者', en: 'Assignee', plain: true,
 		desc: 'そのイシューやプルリクエストを担当する人。'
 	},
 	blame: {
@@ -179,7 +180,7 @@ globalThis.GHJA_TERMS = {
 		desc: '更新を止めて読み取り専用にしたリポジトリ。中身は見られるが変更はできない。'
 	},
 	visibility: {
-		ja: '公開範囲', en: 'Visibility',
+		ja: '公開範囲', en: 'Visibility', plain: true,
 		desc: 'Public は誰でも見られる。Private は自分と招待した人だけ。'
 	},
 	collaborator: {
@@ -203,7 +204,7 @@ globalThis.GHJA_TERMS = {
 		desc: '作ったものを実際のサーバーやサイトに反映して、使える状態にすること。'
 	},
 	environment: {
-		ja: '環境', en: 'Environment',
+		ja: '環境', en: 'Environment', plain: true,
 		desc: 'デプロイ先（本番、テストなど）ごとの設定のまとまり。'
 	},
 	pages: {

@@ -14,7 +14,8 @@
 	globalThis.__ghjaLoaded = true;
 
 	const hasChrome = typeof chrome !== 'undefined' && chrome.storage;
-	const DEFAULTS = { enabled: true, showEnglish: true, tooltips: true, collect: false };
+	// termStyle：用語の出し方　en＝英語のまま（説明は出る）／both＝カタカナ (English)／ja＝カタカナだけ
+	const DEFAULTS = { enabled: true, termStyle: 'en', tooltips: true, collect: false };
 	let settings = Object.assign({}, DEFAULTS);
 
 	// ---------------------------------------------------------------- 訳さない場所
@@ -38,7 +39,7 @@
 	].join(',');
 
 	// ---------------------------------------------------------------- 訳す
-	// 辞書の値 '[[pr|Pull requests]]を作成' → { text: 'プルリクエスト (Pull requests)を作成', terms: ['pr'] }
+	// 辞書の値 '[[pr]]を作成' → { text: 'Pull requestを作成'（設定によって 'プルリクエスト (Pull request)を作成'）, terms: ['pr'] }
 	function render(value) {
 		const terms = [];
 		const text = value.replace(/\[\[([a-z]+)(?:\|([^\]]+))?\]\]/g, (m, id, en) => {
@@ -46,7 +47,8 @@
 			if (!t) return en || id;
 			terms.push(id);
 			const english = en || t.en;
-			if (!settings.showEnglish || t.ja === english || t.ja.toLowerCase() === english.toLowerCase()) return t.ja;
+			if (settings.termStyle === 'ja' || t.plain) return t.ja;
+			if (settings.termStyle !== 'both' || t.ja.toLowerCase() === english.toLowerCase()) return english;
 			return t.ja + ' (' + english + ')';
 		});
 		return { text, terms };

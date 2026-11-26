@@ -7,7 +7,7 @@ GitHub-ja は、GitHub の **ボタンやメニューなど決まった文言だ
 
 | | |
 |---|---|
-| 日本語化 | `Pull requests` → **プルリクエスト (Pull requests)** |
+| 日本語化 | `New issue` → **新しい Issue**、`Settings` → **設定** |
 | 用語の説明 | 点線の付いた言葉にカーソルを乗せると、意味とたとえが出る |
 | 訳さないもの | README、コード、コメント、イシューや PR の題名、コミットメッセージ、ファイル名、ユーザー名、検索欄 |
 | 通信 | なし。翻訳はすべてブラウザの中で、拡張機能に入っている辞書だけで行います |
@@ -17,7 +17,7 @@ GitHub-ja は、GitHub の **ボタンやメニューなど決まった文言だ
 ツールバーのアイコンから切り替えられます。
 
 - **日本語で表示する**：オフにするとその場で英語に戻ります
-- **用語に英語を併記する**：「プルリクエスト (Pull request)」の括弧を出すかどうか
+- **用語の表示**：Git の用語を「英語のまま（Pull request）」「カタカナ (英語)」「カタカナ」から選べます（初期は英語のまま）
 - **用語の説明を出す**：ホバーで説明を出すかどうか
 - **訳されていない言葉を集める**：訳のない文言を手元に記録して、コピーできます（辞書づくりへの協力用。どこにも送信されません）
 
@@ -25,20 +25,52 @@ GitHub-ja は、GitHub の **ボタンやメニューなど決まった文言だ
 
 1. このリポジトリをダウンロード（または `git clone`）
 2. Chrome で `chrome://extensions` を開き、右上の「デベロッパー モード」をオン
-3. 「パッケージ化されていない拡張機能を読み込む」でこのフォルダを選ぶ
+3. 「パッケージ化されていない拡張機能を読み込む」で `extension/` フォルダを選ぶ（ストア版はオフにしておく）
+
+## フォルダ構成
+
+```
+extension/
+  manifest.json   … 拡張全体の設定。バージョンはここ
+  src/dict-ja.js  … 画面の英語 → 日本語の辞書
+  src/terms.js    … 用語の説明
+  src/content.js  … GitHub のページを訳す本体
+  popup/          … ツールバーのアイコンを押したときの設定画面
+test/run.js       … jsdom のテスト（cd test && npm i && node run.js）
+```
+
+## 更新のしかた
+
+1. `extension/` の中のファイルを直す
+2. `extension/manifest.json` の `version` を上げる（例：0.2.0 → 0.2.1）
+3. main に push する
+
+version が上がっていれば GitHub Actions（`.github/workflows/release.yml`）が zip を作ってリリースに付け、Chrome ウェブストアにアップロードして審査に出す（Secrets とアイテム ID が設定してあるときだけ）。
+
+### ストア提出に使う Secrets
+
+| 名前 | 中身 |
+|---|---|
+| `CWS_CLIENT_ID` | Google Cloud の OAuth クライアントID |
+| `CWS_CLIENT_SECRET` | 同じクライアントのシークレット |
+| `CWS_REFRESH_TOKEN` | `https://www.googleapis.com/auth/chromewebstore` で取ったリフレッシュトークン |
+| `CWS_PUBLISHER_ID` | デベロッパーダッシュボードの「アカウント」に出るパブリッシャーID |
+
+ほかの拡張機能（classroom-download など）と同じ値を使える。
+アイテム ID は、ストアに初めて手動で提出したあとで `.github/workflows/release.yml` と `cws-check.yml` の `EXTENSION_ID` に入れる。
 
 ## 辞書に協力する
 
 訳がない・おかしいところを見つけたら、[イシュー](https://github.com/nk7-jp/GitHub-ja/issues) で教えてください。プルリクエストも歓迎です。
 
-- 画面の文言 → [`src/dict-ja.js`](src/dict-ja.js)
+- 画面の文言 → [`extension/src/dict-ja.js`](extension/src/dict-ja.js)
   - キーは GitHub の英語と **完全に同じ** にします（前後の空白は無視されます）
-  - 用語は `[[pr]]` や `[[pr|Pull requests]]` のように書くと、「プルリクエスト (Pull requests)」＋説明になります
-- 用語の説明 → [`src/terms.js`](src/terms.js)
+  - 用語は `[[pr]]` や `[[pr|Pull requests]]` のように書くと、設定に合わせて「Pull requests」「プルリクエスト (Pull requests)」などで表示され、説明が付きます
+- 用語の説明 → [`extension/src/terms.js`](extension/src/terms.js)
 
 ### 訳し方の決まり
 
-- Git / GitHub の用語は **カタカナ＋英語**（設定で英語を消せる）：コミット、ブランチ、プルリクエスト、イシュー、フォーク…
+- Git / GitHub の用語は辞書では `[[ ]]` で書き、表示は設定で選ぶ（英語のまま／カタカナ (英語)／カタカナ）。「実行」「差分」のような普通の言葉はいつも日本語
 - 普通の言葉は自然な日本語：Settings → 設定、Cancel → キャンセル
 - 「です・ます」は付けない（ボタン・見出し）。説明文だけ「です・ます」
 - 製品名はそのまま：GitHub Actions、Codespaces、Copilot

@@ -37,3 +37,7 @@ button.ghost { background: transparent; color: var(--fg); }
 footer { display: flex; gap: 4px; align-items: center; margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--line); font-size: 12px; }
 footer a { color: var(--mute); }
 footer .ver { margin-left: auto; color: var(--mute); }
+select {
+	flex: none; font: inherit; font-size: 12px; padding: 3px 6px; border-radius: 6px;
+	border: 1px solid var(--line); background: var(--bg); color: var(--fg);
+}

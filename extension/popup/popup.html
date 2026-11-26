@@ -21,13 +21,17 @@
 		</span>
 		<input type="checkbox" id="enabled" />
 	</label>
-	<label class="row">
+	<div class="row">
 		<span>
-			<b>用語に英語を併記する</b>
-			<small>例：プルリクエスト (Pull request)</small>
+			<b>用語の表示</b>
+			<small>Pull request・Fork などの Git の用語</small>
 		</span>
-		<input type="checkbox" id="showEnglish" />
-	</label>
+		<select id="termStyle">
+			<option value="en">英語のまま</option>
+			<option value="both">カタカナ (英語)</option>
+			<option value="ja">カタカナ</option>
+		</select>
+	</div>
 	<label class="row">
 		<span>
 			<b>用語の説明を出す</b>

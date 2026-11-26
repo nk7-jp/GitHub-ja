@@ -1,19 +1,20 @@
 // GitHub-ja のポップアップ（設定）
-const DEFAULTS = { enabled: true, showEnglish: true, tooltips: true, collect: false };
+const DEFAULTS = { enabled: true, termStyle: 'en', tooltips: true, collect: false };
 const KEYS = Object.keys(DEFAULTS);
 
 function syncDisabled() {
 	const on = document.getElementById('enabled').checked;
-	document.getElementById('showEnglish').disabled = !on;
+	document.getElementById('termStyle').disabled = !on;
 	document.getElementById('tooltips').disabled = !on;
 }
 
 chrome.storage.sync.get(DEFAULTS, (s) => {
 	for (const k of KEYS) {
 		const box = document.getElementById(k);
-		box.checked = !!s[k];
+		const isCheck = box.type === 'checkbox';
+		if (isCheck) box.checked = !!s[k]; else box.value = s[k];
 		box.addEventListener('change', () => {
-			chrome.storage.sync.set({ [k]: box.checked });
+			chrome.storage.sync.set({ [k]: isCheck ? box.checked : box.value });
 			syncDisabled();
 		});
 	}

@@ -66,7 +66,7 @@ GitHub の [Releases](https://github.com/nk7-jp/GitHub-ja/releases) にある最
 | 小さいプロモーションタイル | `store/small-tile-440x280.png` |
 | 公式 URL | なし |
 | ホームページ URL | https://github.com/nk7-jp/GitHub-ja |
-| サポート URL | https://github.com/nk7-jp/GitHub-ja/issues |
+| サポート URL | https://github.com/nk7-jp/GitHub-ja/issues/new |
 
 ## 4. 「プライバシー」タブ
 | 項目 | 入れるもの |

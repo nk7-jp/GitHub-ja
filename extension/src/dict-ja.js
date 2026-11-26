@@ -1061,13 +1061,39 @@ globalThis.GHJA_DICT = {
 		'MCP registry': 'MCP レジストリ',
 		'GitHub Developer Program': 'GitHub 開発者プログラム',
 		'GitHub developer program': 'GitHub 開発者プログラム',
-		'Join the GitHub Developer Program': 'GitHub 開発者プログラムに参加'
+		'Join the GitHub Developer Program': 'GitHub 開発者プログラムに参加',
+		// アカウント設定
+		'Change username': 'ユーザー名を変更',
+		'Changing your username can have': 'ユーザー名を変えると、',
+		'unintended side effects': '思わぬ影響が出ることがあります',
+		'Looking to manage account security settings? You can find them in the': 'アカウントのセキュリティ設定をお探しですか？',
+		'page.': 'のページにあります。',
+		'Link Patreon account': 'Patreon アカウントを連携',
+		'Connect with Patreon': 'Patreon と連携',
+		'Connect a Patreon account for': '',
+		'to sponsor maintainers with. Get recognition on GitHub for sponsorships made on Patreon when the sponsored person has linked Patreon and GitHub, too, and has a public GitHub Sponsors profile.': 'で開発者を支援するための Patreon アカウントを連携します。支援先の人も Patreon と GitHub を連携していて、GitHub Sponsors のプロフィールを公開している場合、Patreon での支援が GitHub にも表示されます。',
+		'Export account data': 'アカウントのデータを書き出す',
+		'Export all repositories and profile metadata for': '',
+		'. Exports will be available for 7 days.': 'のすべての[[repository|repositories]]とプロフィール情報を書き出します。書き出したデータは 7 日間ダウンロードできます。',
+		'Start export': '書き出しを開始',
+		'Successor settings': '後継者の設定',
+		'Learn more about account successors.': 'アカウントの後継者についてくわしく。',
+		'Search by username, full name, or email address': 'ユーザー名・氏名・メールアドレスで検索',
+		'Add Successor': '後継者を追加',
+		'Delete account': 'アカウントを削除',
+		'Delete your account': 'アカウントを削除',
+		'Once you delete your account, there is no going back. Please be certain.': 'アカウントを削除すると、元に戻せません。よく確認してください。'
 
 
 	},
 
 	// 数字や名前が入る文。前から順に試して、最初に合ったものを使う。
 	patterns: [
+		// あいさつ（ダッシュボードの「Good afternoon, 名前!」など。名前はそのまま）
+		[/^Good (morning|afternoon|evening|night)(?:,\s*([^!.]+?))?\s*([!.])?$/, (m, t, name) => ({ morning: 'おはようございます', afternoon: 'こんにちは', evening: 'こんばんは', night: 'こんばんは' }[t]) + (name ? '、' + name + ' さん' : '') + '！'],
+		[/^Welcome back(?:,\s*([^!.]+?))?\s*[!.]?$/, (m, name) => 'おかえりなさい' + (name ? '、' + name + ' さん' : '') + '！'],
+		[/^Hi there\s*[!.]?$/, 'こんにちは！'],
+		[/^Hi(?:,)? ([^!.\s]+)\s*[!.]?$/, 'こんにちは、$1 さん！'],
 		// 曜日・月の名前（貢献のグラフなど）
 		[/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)(day|sday|nesday|rsday|urday)?$/, (m, d) => ({ Mon: '月', Tue: '火', Wed: '水', Thu: '木', Fri: '金', Sat: '土', Sun: '日' }[d]) + (m.length > 3 ? '曜日' : '')],
 		[/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)(uary|ruary|ch|il|e|y|ust|tember|ober|ember)?$/, (m, mo) => GHJA_MONTH[mo] + '月'],
@@ -1081,6 +1107,8 @@ globalThis.GHJA_DICT = {
 		[/^([\d,]+) lines? changed$/, '$1 行を変更'],
 		[/^([\d,]+) remaining$/, '残り $1'],
 		[/^Workflow runs for (.+)$/, '$1 の[[run|runs]]'],
+		[/^By clicking "Add Successor" below, I acknowledge that I am the owner of the (@[\w-]+) account, and am authorizing GitHub to transfer content within that account to my GitHub Successor, designated below, in the event of my death\. I understand that this appointment of a successor does not override legally binding next-of-kin rules or estate laws of any relevant jurisdiction, and does not create a binding will\.$/,
+			'下の「後継者を追加」を押すと、私が $1 アカウントの所有者であり、私が亡くなった場合にこのアカウントの内容を下で指定する GitHub の後継者に移すことを GitHub に許可したものとみなされます。後継者の指定は、関係する地域の法律で定められた近親者の権利や相続法に優先するものではなく、法的な遺言にもなりません。（参考訳。正式な内容は英語の原文です）'],
 		// 日付「Nov 23, 2026」→「2026年11月23日」
 		[/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* (\d{1,2}), (\d{4})$/, (m, mo, d, y) => y + '年' + GHJA_MONTH[mo] + '月' + d + '日'],
 		[/^(January|February|March|April|May|June|July|August|September|October|November|December) (\d{1,2}), (\d{4}) – (January|February|March|April|May|June|July|August|September|October|November|December) (\d{1,2}), (\d{4})$/,

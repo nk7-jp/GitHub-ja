@@ -23,7 +23,7 @@ jobs:
           PUBLISHER_ID: ${{ secrets.CWS_PUBLISHER_ID }}
         run: |
           if [ -z "$EXTENSION_ID" ]; then
-            echo "::warning::変数 CWS_EXTENSION_ID が未設定です（ストアに初めて提出したあとで、Settings → Secrets and variables → Actions → Variables に入れてください）"
+            echo "::warning::変数 CWS_EXTENSION_ID が未設定です（Settings → Secrets and variables → Actions → Variables に入れてください）"
             exit 0
           fi
           for v in CLIENT_ID CLIENT_SECRET REFRESH_TOKEN PUBLISHER_ID; do

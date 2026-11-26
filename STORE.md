@@ -1,4 +1,6 @@
-# Chrome ウェブストアの掲載文（コピー用）
+# Chrome ウェブストアの掲載文
+
+ストアの掲載情報を変えるときの控え。画像は `store/` にある（`compose-*.html` から作り直せる）。
 
 ## 名前
 Japanese UI & Glossary for GitHub
@@ -44,51 +46,9 @@ One-click Japanese UI for GitHub with a built-in Git glossary. Translates only G
 - ユーザーデータは収集しない
 - 単一用途：GitHub の画面の日本語化（用語の説明と、オンにした場合の端末内での翻訳を含む）
 
----
-
-# 最初の提出のしかた（1 回だけ手動）
-
-## 1. zip を用意する
-GitHub の [Releases](https://github.com/nk7-jp/GitHub-ja/releases) にある最新の `GitHub-ja-x.y.z.zip` をダウンロードする（main に push したときに自動で作られる）。
-
-## 2. 新しいアイテムを作る
-1. [デベロッパーダッシュボード](https://chrome.google.com/webstore/devconsole) →「新しいアイテム」
-2. zip をアップロード
-
-## 3. 「ストアの掲載情報」タブ
-| 項目 | 入れるもの |
+## ストアの URL
+| 項目 | URL |
 |---|---|
-| 説明 | 上の「説明」をコピー |
-| カテゴリ | デベロッパー ツール |
-| 言語 | 日本語 |
-| ストアアイコン | 自動（manifest の 128px） |
-| スクリーンショット | `store/screenshot-1-setup.png`、`store/screenshot-2-popup.png`、`store/screenshot-3-mt.png`（＋実際の GitHub の画面があれば） |
-| 小さいプロモーションタイル | `store/small-tile-440x280.png` |
-| 公式 URL | なし |
-| ホームページ URL | https://github.com/nk7-jp/GitHub-ja |
-| サポート URL | https://github.com/nk7-jp/GitHub-ja/issues/new |
-
-## 4. 「プライバシー」タブ
-| 項目 | 入れるもの |
-|---|---|
-| 単一用途の説明 | GitHub の画面を日本語で表示する（画面の文言を辞書で日本語に置き換え、用語にカーソルを乗せると意味を表示する。辞書にない短い文章は、利用者がオンにした場合だけ Chrome 内蔵の翻訳機能で端末の中で翻訳する）。 |
-| storage の理由 | 日本語化のオンオフや用語の表示方法などの設定を保存するため。 |
-| ホスト権限の理由 | github.com と gist.github.com のページの画面の文言を日本語に置き換えるため。辞書と Chrome 内蔵の翻訳機能（端末の中で動く）だけを使い、ページの内容を外部に送信することはない。 |
-| リモートコード | 「いいえ、リモートコードを使用していません」 |
-| データの使用 | どの項目にもチェックを入れない（収集しない）。下の 3 つの宣言にはチェックを入れる |
-| プライバシーポリシーの URL | https://nk7.jp/policy/privacy/github-ja/ |
-
-## 5. 「配布」タブ
-- 公開設定：公開
-- 地域：すべての地域
-
-## 6. 審査に提出
-「審査のため送信」を押す。ダッシュボードの URL かアイテムの画面に出る 32 文字の ID（英小文字）を控える。
-
-## 7. 自動提出をオンにする
-GitHub-ja のリポジトリ → Settings → Secrets and variables → Actions →「**Variables**」タブ →「New repository variable」
-- Name：`CWS_EXTENSION_ID`
-- Value：控えた ID
-
-入れたら Actions →「ストア接続チェック」→「Run workflow」で接続を確かめる。
-これ以降は `extension/manifest.json` の `version` を上げて main に push するだけで、自動でストアに提出される。
+| ホームページ | https://github.com/nk7-jp/GitHub-ja |
+| サポート | https://github.com/nk7-jp/GitHub-ja/issues/new |
+| プライバシーポリシー | https://nk7.jp/policy/privacy/github-ja/ |

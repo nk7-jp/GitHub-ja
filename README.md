@@ -61,7 +61,7 @@ version が上がっていれば GitHub Actions（`.github/workflows/release.yml
 | `CWS_PUBLISHER_ID` | デベロッパーダッシュボードの「アカウント」に出るパブリッシャーID |
 
 ほかの拡張機能（classroom-download など）と同じ値を使える。
-アイテム ID は、ストアに初めて手動で提出したあとで、Settings → Secrets and variables → Actions →「Variables」タブに `CWS_EXTENSION_ID` として入れる（Secret ではなく Variable）。
+ストアのアイテム ID は、Settings → Secrets and variables → Actions →「Variables」の `CWS_EXTENSION_ID` に入れてある（Secret ではなく Variable）。
 
 ## 辞書に協力する
 

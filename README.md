@@ -36,6 +36,8 @@ extension/
   src/terms.js    … 用語の説明
   src/content.js  … GitHub のページを訳す本体
   popup/          … ツールバーのアイコンを押したときの設定画面
+  welcome/        … インストール直後に開く最初の設定画面
+  src/background.js … インストールしたときに最初の設定画面を開く
 test/run.js       … jsdom のテスト（cd test && npm i && node run.js）
 ```
 

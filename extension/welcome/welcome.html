@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>GitHub-ja の設定</title>
+	<link rel="icon" href="../icons/icon32.png" />
+	<link rel="stylesheet" href="welcome.css" />
+</head>
+<body>
+	<main>
+		<header>
+			<img src="../icons/icon128.png" alt="" width="64" height="64" />
+			<div>
+				<h1>GitHub-ja へようこそ</h1>
+				<p>GitHub の画面を日本語にして、用語の意味をその場で説明します。最初に表示のしかたを選んでください。あとからツールバーのアイコンでいつでも変えられます。</p>
+			</div>
+		</header>
+
+		<section>
+			<h2><span class="num">1</span>Git の用語をどう表示しますか？</h2>
+			<p class="lead">Pull request・Fork・Branch のような用語の出し方です。ふつうの言葉（設定・キャンセルなど）は、どれを選んでも日本語になります。</p>
+			<div class="choices" id="choices">
+				<label class="choice">
+					<input type="radio" name="termStyle" value="en" />
+					<span class="title">英語のまま <em>おすすめ</em></span>
+					<span class="desc">英語のドキュメントや検索と同じ言葉で覚えられます。</span>
+					<span class="mock" data-style="en"></span>
+				</label>
+				<label class="choice">
+					<input type="radio" name="termStyle" value="both" />
+					<span class="title">カタカナ (英語)</span>
+					<span class="desc">読み方と英語の両方がわかります。少し長くなります。</span>
+					<span class="mock" data-style="both"></span>
+				</label>
+				<label class="choice">
+					<input type="radio" name="termStyle" value="ja" />
+					<span class="title">カタカナ</span>
+					<span class="desc">いちばん日本語らしく、短く表示します。</span>
+					<span class="mock" data-style="ja"></span>
+				</label>
+			</div>
+		</section>
+
+		<section>
+			<h2><span class="num">2</span>用語の説明を出しますか？</h2>
+			<label class="row">
+				<span>
+					<b>点線の付いた言葉にカーソルを乗せると、意味を表示する</b>
+					<small>試しに、下の <span class="demo-term" tabindex="0" data-term="fork">Fork</span> や <span class="demo-term" tabindex="0" data-term="pr">Pull request</span> にカーソルを乗せてみてください。</small>
+				</span>
+				<input type="checkbox" id="tooltips" checked />
+			</label>
+		</section>
+
+		<div class="actions">
+			<button id="start" type="button">この設定で始める</button>
+			<p class="done" id="done" hidden>
+				設定しました。GitHub を開くと日本語で表示されます。
+				<a href="https://github.com/" class="button-link">GitHub を開く</a>
+			</p>
+		</div>
+
+		<footer>
+			翻訳はすべてブラウザの中で行い、ページの内容をどこにも送信しません。
+			<a href="https://github.com/nk7-jp/GitHub-ja" target="_blank" rel="noopener">ソースコード</a>
+		</footer>
+	</main>
+	<div class="tip" id="tip" role="tooltip" hidden></div>
+
+	<script src="../src/terms.js"></script>
+	<script src="../src/dict-ja.js"></script>
+	<script src="welcome.js"></script>
+</body>
+</html>

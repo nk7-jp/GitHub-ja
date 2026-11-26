@@ -2,6 +2,9 @@
 
 **GitHub の画面を自然な日本語にして、用語の意味もその場でわかる Chrome 拡張機能（非公式）**
 
+- ストア：https://chromewebstore.google.com/detail/fmmmaopjipkeedjapdbnbnkipijjeedj （審査中）
+- ストアのID：`fmmmaopjipkeedjapdbnbnkipijjeedj`
+
 ブラウザの自動翻訳を使うと、`Fork` が「フォーク（食器）」、`Branch` が「枝」になったり、README やコードまで訳されてしまったりします。
 GitHub-ja は、GitHub の **ボタンやメニューなど決まった文言だけ** を辞書で日本語にします。さらに、専門用語にカーソルを乗せると **「要するに何をしているのか」** の説明が出ます。
 

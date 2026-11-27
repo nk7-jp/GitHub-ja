@@ -1134,6 +1134,22 @@ globalThis.GHJA_DICT = {
 		[/^([\d,]+) lines? changed$/, '$1 行を変更'],
 		[/^([\d,]+) remaining$/, '残り $1'],
 		[/^Workflow runs for (.+)$/, '$1 の[[run|runs]]'],
+		// 「見つかりません」系（No pull requests found, try a different filter. など）
+		[/^No (pull requests|issues|discussions|results|repositories|projects|packages|releases|commits|branches|tags|workflow runs|items) (?:found|match(?:ed)? your (?:search|filters?))[,.]?\s*(try a different filter|try a different search(?: query)?)?\.?$/i,
+			(m, what, hint) => ({ 'pull requests': '[[pr]]', issues: '[[issue]]', discussions: '[[discussion]]', results: '結果', repositories: '[[repository]]', projects: '[[project]]', packages: 'パッケージ', releases: '[[release]]', commits: '[[commit]]', branches: '[[branch]]', tags: '[[tag]]', 'workflow runs': '[[workflow]]の[[run]]', items: '項目' }[what.toLowerCase()])
+				+ 'は見つかりませんでした。' + (hint ? (/filter/.test(hint) ? '絞り込みを変えてみてください。' : '別の言葉で検索してみてください。') : '')],
+		// フィードの動き（名前の後ろに続く文）
+		[/^published (\d+) releases?\s*·?$/, '$1 件の[[release]]を公開'],
+		[/^published a release\s*·?$/, '[[release]]を公開'],
+		[/^starred (\d+) repositor(?:y|ies)\s*·?$/, '$1 個の[[repository]]に[[star]]を付けました'],
+		[/^starred a repository\s*·?$/, '[[repository]]に[[star]]を付けました'],
+		[/^forked a repository\s*·?$/, '[[repository]]を[[fork]]しました'],
+		[/^created a repository\s*·?$/, '[[repository]]を作成しました'],
+		[/^started following\s*·?$/, 'をフォローしました'],
+		[/^opened (?:an )?issue\s*·?$/, '[[issue]]を作成しました'],
+		[/^opened (?:a )?pull request\s*·?$/, '[[pr]]を作成しました'],
+		[/^made this repository public\s*·?$/, 'この[[repository]]を公開しました'],
+		[/^Full Changelog:?$/, 'すべての変更：'],
 		[/^(Delete|Edit): (v?[\w.-]+)$/, (m, a, v) => v + ' を' + (a === 'Delete' ? '削除' : '編集')],
 		[/^More actions for workflow run (\d+)$/, '[[workflow]]の[[run]] $1 のその他の操作'],
 		[/^Pin (.+)$/, '$1 を固定'],
